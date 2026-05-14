@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이어진 : 포트폴리오</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --gray: #888;
+  --light: #f5f5f5;
+  --border: #e8e8e8;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+  --max: 1080px;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+
+nav {
+  position: sticky; top: 0;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+}
+.nav-inner {
+  max-width: var(--max); margin: 0 auto; padding: 0 24px;
+  height: 56px; display: flex; justify-content: space-between; align-items: center;
+}
+.nav-name { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a { font-size: 13px; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+
+.hero { max-width: var(--max); margin: 0 auto; padding: 80px 24px 60px; }
+.hero h1 { font-size: clamp(26px, 5vw, 38px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.4; margin-bottom: 14px; }
+.hero p { font-size: 15px; color: var(--gray); line-height: 1.7; max-width: 460px; }
+
+.section { max-width: var(--max); margin: 0 auto; padding: 60px 24px; }
+.section-title {
+  font-size: 12px; font-weight: 500; color: var(--gray);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 28px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+
+.filters { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+.fil {
+  padding: 6px 14px; font-size: 13px; font-family: var(--sans);
+  border: 1px solid var(--border); background: var(--bg); color: var(--gray);
+  border-radius: 6px; cursor: pointer; transition: all 0.2s;
+}
+.fil:hover { border-color: #bbb; color: var(--text); }
+.fil.on { background: var(--text); color: #fff; border-color: var(--text); }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.card {
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+  cursor: pointer; transition: box-shadow 0.2s, transform 0.2s; background: var(--bg);
+}
+.card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
+
+.card-img {
+  aspect-ratio: 4/3; background: var(--light);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; position: relative;
+}
+.card-img svg { opacity: 0.3; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; }
+
+/* 비디오 카드 재생 아이콘 */
+.card-play {
+  position: absolute;
+  width: 48px; height: 48px;
+  background: rgba(0,0,0,0.55);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1;
+  transition: background 0.2s;
+}
+.card:hover .card-play { background: rgba(0,0,0,0.75); }
+.card-play::after {
+  content: '';
+  display: block;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 8px 0 8px 14px;
+  border-color: transparent transparent transparent #fff;
+  margin-left: 3px;
+}
+
+.card-info { padding: 14px 16px; }
+.card-tag { font-size: 11px; color: var(--gray); margin-bottom: 3px; }
+.card-name { font-size: 14px; font-weight: 500; }
+
+.about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.about-wrap p { font-size: 14px; line-height: 1.8; color: #555; margin-bottom: 14px; }
+.info-table { width: 100%; border-collapse: collapse; }
+.info-table tr { border-bottom: 1px solid var(--border); }
+.info-table td { padding: 9px 0; font-size: 13px; vertical-align: top; }
+.info-table td:first-child { color: var(--gray); width: 80px; }
+.skill-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+.skill-list span { padding: 4px 11px; font-size: 12px; background: var(--light); border-radius: 5px; color: #555; }
+
+.contact-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.contact-row a {
+  padding: 9px 18px; font-size: 13px; font-family: var(--sans);
+  color: var(--text); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 8px; transition: background 0.2s;
+}
+.contact-row a:hover { background: var(--light); }
+
+footer { max-width: var(--max); margin: 0 auto; padding: 28px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--gray); }
+
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35); backdrop-filter: blur(4px);
+  z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.overlay.show { display: flex; }
+.modal { background: #fff; border-radius: 12px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; }
+.modal-img {
+  background: var(--light);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px 12px 0 0; position: relative; overflow: hidden;
+  min-height: 200px;
+}
+.modal-img svg { opacity: 0.25; }
+.modal-img img { width: 100%; height: auto; display: block; }
+.modal-img:has(svg) { aspect-ratio: 16/9; }
+
+/* 모달 유튜브 영상 */
+.modal-video {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 비율 */
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  background: #000;
+}
+.modal-video iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+}
+
+.modal-body { padding: 24px; }
+.modal-body .tag { font-size: 12px; color: var(--gray); margin-bottom: 4px; }
+.modal-body h3 { font-size: 19px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.02em; }
+.modal-body p { font-size: 14px; color: #555; line-height: 1.75; margin-bottom: 18px; }
+.modal-meta { display: flex; gap: 28px; padding-top: 14px; border-top: 1px solid var(--border); }
+.modal-meta div { font-size: 13px; }
+.modal-meta span { display: block; font-size: 11px; color: var(--gray); margin-bottom: 2px; }
+.close-btn {
+  position: absolute; top: 10px; right: 10px;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: none; background: rgba(255,255,255,0.85);
+  font-size: 15px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: #333;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .about-wrap { grid-template-columns: 1fr; gap: 28px; }
+}
+@media (max-width: 480px) {
+  .grid { grid-template-columns: 1fr; }
+  .hero { padding: 52px 20px 36px; }
+  .section { padding: 44px 20px; }
+  .nav-inner { padding: 0 20px; }
+  .nav-links { gap: 20px; }
+  .modal-meta { gap: 16px; flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>이어진<br>포트폴리오</h1>
+  <p>상세페이지, 포스터, POP, 등 인쇄·디지털 매체 전반의 디자인을 합니다.</p>
+</div>
+
+<div class="section" id="work">
+  <div class="section-title">Works</div>
+  <div class="filters">
+    <button class="fil on" data-f="all">전체</button>
+    <button class="fil" data-f="detail">상세페이지</button>
+    <button class="fil" data-f="poster">포스터</button>
+    <button class="fil" data-f="ETC">ETC</button>
+    <button class="fil" data-f="video">Video</button>
+    <button class="fil" data-f="personal">개인작업</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="section" id="about">
+  <div class="section-title">About</div>
+  <div class="about-wrap">
+    <div>
+      <p>명확한 정보 전달을 하는 디자인을 추구합니다.</p>
+      <p>브랜드의 아이덴티티를 이해하고, 타겟에 맞는 비주얼을 만듭니다.</p>
+      <p>클라이언트와 미팅/논의 후 원하는 결과물을 만들어 냅니다.</p>
+      <p>상세페이지, 인쇄 포스터, 매장 POP, 온라인 배너 등 다양한 매체 경험이 있습니다.</p>
+      <div class="skill-list">
+        <span>Photoshop</span>
+        <span>Illustrator</span>
+        <span>Lightroom</span>
+        <span>Premiere Pro</span>
+      </div>
+    </div>
+    <div>
+      <table class="info-table">
+        <tr><td>이름</td><td>이어진</td></tr>
+        <tr><td>이메일</td><td>joblessfish@gmail.com</td></tr>
+        <tr><td>연락처</td><td>010-8538-6624</td></tr>
+        <tr><td>위치</td><td>서울</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 이어진</footer>
+
+<!-- 모달: modal-media 영역이 이미지 또는 유튜브를 표시 -->
+<div class="overlay" id="overlay" onclick="closeM()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div id="modalMedia">
+      <!-- 이미지 또는 유튜브가 여기에 들어갑니다 -->
+    </div>
+    <div class="modal-body">
+      <div class="tag" id="mCat"></div>
+      <h3 id="mTitle"></h3>
+      <p id="mDesc"></p>
+      <div class="modal-meta">
+        <div><span>클라이언트</span><div id="mClient"></div></div>
+        <div><span>연도</span><div id="mYear"></div></div>
+        <div><span>도구</span><div id="mTools"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/*
+ * ============================================================
+ *  작업물 데이터 목록
+ * ============================================================
+ *
+ *  이미지 넣는 방법:
+ *    img: "images/파일명.jpg"
+ *
+ *  유튜브 영상 넣는 방법:
+ *    youtube: "유튜브 영상 ID"
+ *
+ *    유튜브 ID 찾는 법:
+ *    https://www.youtube.com/watch?v=XXXXXXXXX  ← "v=" 뒤의 값
+ *    https://youtu.be/XXXXXXXXX                 ← "/" 뒤의 값
+ *
+ *    예) https://www.youtube.com/watch?v=dQw4w9WgXcQ
+ *        → youtube: "dQw4w9WgXcQ"
+ *
+ * ============================================================
+ */
+
+const P = [
+
+  /* ─────────── 상세페이지 ─────────── */
+
+  // [상세페이지 1] 최가상회 떡갈비
+  {
+    t:      "최가상회 떡갈비 온라인 상세페이지",
+    c:      "detail",
+    cl:     "상세페이지",
+    desc:   "최가상회 상세페이지 작업 / gif 이미지는 외주 촬영 / 해당페이지 : https://smartstore.naver.com/choiga_market/products/6415756197",
+    client: "최가상회",
+    y:      "2023",
+    tools:  "Photoshop, Illustrator, Premiere Pro",
+    bg:     "#EDEBE8",
+    img:    "images/cgsh.jpg"
+  },
+
+  // [상세페이지 2] 최가상회 간장게장
+  {
+    t:      "최가상회 간장게장 온라인 상세페이지",
+    c:      "detail",
+    cl:     "상세페이지",
+    desc:   "최가상회 상세페이지 작업 / gif 이미지는 외주 촬영 / 해당페이지 : https://smartstore.naver.com/choiga_market/products/6415756197",
+    client: "최가상회",
+    y:      "2023",
+    tools:  "Photoshop, Illustrator, Premiere Pro",
+    bg:     "#EDEBE8",
+    img:    "images/cgcd.png"
+  },
+
+  // [상세페이지 3] 상/하단 배너
+  {
+    t:      "상세페이지 상/하단 배너",
+    c:      "detail",
+    cl:     "상세페이지",
+    desc:   "스마트스토어 상세페이지 상/하단 배너",
+    client: "네이버 스마트스토어 (폐업으로 확인)",
+    y:      "2025",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#EDEBE8",
+    img:    "images/dba.jpg"
+  },
+
+
+  /* ─────────── 포스터 ─────────── */
+
+  // [포스터 1]
+  {
+    t:      "포스터",
+    c:      "poster",
+    cl:     "포스터",
+    desc:   "와인 시음회 포스터 _ A4.",
+    client: "그라쏘",
+    y:      "2025",
+    tools:  "Illustrator, InDesign",
+    bg:     "#E6E8EB",
+    img:    "images/p1.png"
+  },
+
+  // [포스터 2]
+  {
+    t:      "포스터",
+    c:      "poster",
+    cl:     "포스터",
+    desc:   "인스타그램 업로드용 와인 시음회 포스터.",
+    client: "그라쏘",
+    y:      "2025",
+    tools:  "Illustrator",
+    bg:     "#EBEAE6",
+    img:    "images/p2.png"
+  },
+
+  // [포스터 3]  포스터
+  {
+    t:      "지원사업 포스터",
+    c:      "poster",
+    cl:     "포스터",
+    desc:   "센터 비치용 지원사업 포스터",
+    client: "서교예술실험센터",
+    y:      "",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#EDE8E8",
+    img:    "images/sadc.jpg"
+  },
+
+  // [포스터 3]  포스터
+  {
+    t:      "할로윈데이 이벤트 포스터",
+    c:      "poster",
+    cl:     "포스터",
+    desc:   "매장 야외 부착용 할로윈 포스터",
+    client: "그라쏘",
+    y:      "2024",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#EDE8E8",
+    img:    "images/gh.jpg"
+  },
+
+
+  /* ─────────── ETC ─────────── */
+
+  // [ETC 1] 어항로 로고 및 명함
+  {
+    t:      "레트로 노포 어항로 로고 및 명함",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "용리단길에 위치한 해산물 레트로 노포 매장의 브랜드 로고 및 명함제작",
+    client: "어항로",
+    y:      "2020",
+    tools:  "Illustrator, Photoshop",
+    bg:     "#EBE6EA",
+    img:    "images/ahr.jpg"
+  },
+
+  // [ETC 2] 그라쏘 로고
+  {
+    t:      "와인바 로고 제작",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "서대문 와인바 그라쏘 로고 제작",
+    client: "그라쏘",
+    y:      "2025",
+    tools:  "Illustrator, Photoshop",
+    bg:     "#EBE6EA",
+    img:    "images/gl.jpg"
+  },
+
+  // [ETC 3] 그라쏘 메뉴판
+  {
+    t:      "그라쏘 와인비스트로 메뉴판 제작",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "서대문에 위치한 와인바 메뉴이미지 제작 _ A4",
+    client: "그라쏘",
+    y:      "2025",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/gwm.jpg"
+  },
+
+  // [ETC 4] 그라쏘 전단지
+  {
+    t:      "그라쏘 와인비스트로 점심메뉴 전단지",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "서대문에 위치한 와인바 인쇄용 전단지 제작 _ A5",
+    client: "그라쏘",
+    y:      "2025",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/glpa.png"
+  },
+
+  // [ETC 4] 그라쏘 전단지
+  {
+    t:      "그라쏘 와인비스트로 점심메뉴 야외 배너",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "서대문에 위치한 와인바 야외배너 제작",
+    client: "그라쏘",
+    y:      "2025",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/grb.jpg"
+  },
+
+  // [ETC 5] 최가상회 전단지
+  {
+    t:      "최가상회 택배상품 패키지디자인",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "패키지 디자인",
+    client: "최가상회",
+    y:      "2023",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/cgp.png"
+  },
+
+  // [ETC 5] 최가상회 전단지
+  {
+    t:      "최가상회 택배홍보 전단지",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "시장 떡갈비 매장비치용 전단 _ A5 _ 전지에 인쇄",
+    client: "최가상회",
+    y:      "2023",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/cgs.png"
+  },
+
+  // [ETC 5] 최가상회 전단지
+  {
+    t:      "최가상회 이용법 전단지",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "시장 떡갈비 구매고객 설명서 _ A5 _ 전지에 인쇄",
+    client: "최가상회",
+    y:      "2022",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/cgdh.png"
+  },
+
+  // [ETC 6] 간장게장 스티커
+  {
+    t:      "간장게장 포장용기 뚜껑 스티커",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "주문제작_스티커",
+    client: "최가상회",
+    y:      "2023",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/cgcs.png"
+  },
+
+  // [ETC 7] 최가상회 5주년
+  {
+    t:      "최가상회 5주년 리뉴얼 전단지",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "시장 떡갈비 매장비치용 전단 _ A4",
+    client: "최가상회",
+    y:      "2023",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/cg5y.jpg"
+  },
+
+  // [ETC 8] 온양상회 메뉴판
+  {
+    t:      "노량진 수산시장 온양상회 메뉴판 제작",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "철판에 자석시트지 부착 _ 주문제작 각메뉴 따로 인쇄후 현장 부착(위치 등 변경성 고려)",
+    client: "온양상회/전북임실 동일디자인",
+    y:      "2025",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/oym.jpg"
+  },
+
+  // [ETC 9] 다데기 명함
+  {
+    t:      "다데기 실비집 명함제작",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "주문제작",
+    client: "다데기 실비집",
+    y:      "2025",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/ddg.png"
+  },
+
+  // [ETC 9] 그라쏘 명함
+  {
+    t:      "그라쏘 명함제작",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "주문제작",
+    client: "그라쏘",
+    y:      "2023",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/gnc.png"
+  },
+  // [ETC 10] 후라이보이 사인
+  {
+    t:      "후라이보이 야외 사인",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "주문제작",
+    client: "후라이보이",
+    y:      "2024",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/fbs.jpg"
+  },
+
+  // [ETC 10] 후라이보이 사인
+  {
+    t:      "그라쏘 야외 사인",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "주문제작",
+    client: "그라쏘",
+    y:      "2024",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#E8EBE6",
+    img:    "images/gout2.jpg"
+  },
+
+  // [ETC 10] 후라이보이 사인
+  {
+    t:      "외벽 포스터 인테리어 작업",
+    c:      "ETC",
+    cl:     "ETC",
+    desc:   "외벽 인테리어 작업",
+    client: "그라쏘",
+    y:      "2023",
+    tools:  "Photoshop, Illustrator, 현장업무",
+    bg:     "#E8EBE6",
+    img:    "images/gout.JPG"
+  },
+
+
+  /* ─────────── Video ─────────── */
+  /*
+   *  youtube 값에 유튜브 영상 ID만 넣으면 됩니다.
+   *
+   *  예시:
+   *  영상 주소가 https://www.youtube.com/watch?v=dQw4w9WgXcQ 라면
+   *  youtube: "dQw4w9WgXcQ"
+   *
+   *  영상 주소가 https://youtu.be/dQw4w9WgXcQ 라면
+   *  youtube: "dQw4w9WgXcQ"
+   */
+
+  // [Video 1] 샘플 - 제목과 youtube ID를 본인 영상으로 바꿔주세요
+   {
+    t:      "최가상회 레트로 스타일 인트로",
+    c:      "video",
+    cl:     "Video",
+    desc:   "매장내 비치된 브라운관TV 반복영상(옛날 요리프로그램 모음)중 인트로 480p 저해상도로 작업",
+    client: "최가상회",
+    y:      "2023",
+    tools:  "Premiere Pro",
+    bg:     "#E8E8ED",
+    img:    "",
+    youtube: "AolBGll-PNA"  // ← 유튜브 영상 ID
+  },
+
+   // [Video 1] 샘플 - 제목과 youtube ID를 본인 영상으로 바꿔주세요
+   {
+    t:      "최가상회 2000년대 초반 콘셉 조리영상",
+    c:      "video",
+    cl:     "Video",
+    desc:   "매장내 비치된 브라운관TV 반복영상 저해상도로 작업",
+    client: "최가상회",
+    y:      "2023",
+    tools:  "Premiere Pro",
+    bg:     "#E8E8ED",
+    img:    "",
+    youtube: "ZqC2lbJoVlg"  // ← 유튜브 영상 ID
+  },
+
+  {
+    t:      "본식 오프닝영상",
+    c:      "video",
+    cl:     "Video",
+    desc:   "오프닝 영상_은하수를여행하는 히치하이커들의 안내서 레퍼런스",
+    client: "본인, 아내",
+    y:      "2025",
+    tools:  "Premiere Pro, ai(gpt, grok)",
+    bg:     "#E8E8ED",
+    img:    "",
+    youtube: "sz5mj1GVofw"  // ← 유튜브 영상 ID
+  },
+
+  // [Video 2] 샘플
+  {
+    t:      "본식 식전영상",
+    c:      "video",
+    cl:     "Video",
+    desc:   "식전영상 슬라이드 배경 디자인/편집",
+    client: "본인, 아내",
+    y:      "2025",
+    tools:  "Premiere Pro",
+    bg:     "#E8E8ED",
+    img:    "",
+    youtube: "eT5VgB5r2aM"  // ← 유튜브 영상 ID
+  },
+
+
+  /* ─────────── 개인작업 ─────────── */
+
+  // [개인작업 1] 결혼식 청첩장
+  {
+    t:      "결혼식 청첩장",
+    c:      "personal",
+    cl:     "개인작업",
+    desc:   "본인 결혼식 청첩장 촬영과 보정 후 인쇄",
+    client: "본인, 아내",
+    y:      "2025",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#EDE8E8",
+    img:    "images/wdc.png"
+  },
+
+  // [개인작업 1] 결혼식 청첩장
+  {
+    t:      "결혼식 식권",
+    c:      "personal",
+    cl:     "개인작업",
+    desc:   "본인 결혼식 식권",
+    client: "본인, 아내",
+    y:      "2025",
+    tools:  "Photoshop, Illustrator",
+    bg:     "#EDE8E8",
+    img:    "images/wdcd.jpg"
+  },
+
+  // [개인작업 2] 타이포그래피
+  {
+    t:      "타이포그래피",
+    c:      "personal",
+    cl:     "개인작업",
+    desc:   "개인스티커",
+    client: "지인",
+    y:      "2020",
+    tools:  "Illustrator",
+    bg:     "#EDE8E8",
+    img:    "images/od.jpg"
+  },
+
+];
+
+
+/* ─────────── 카테고리별 기본 아이콘 ─────────── */
+
+const icons = {
+  detail:   '<svg width="40" height="40" fill="none" viewBox="0 0 40 40"><rect x="8" y="4" width="24" height="32" rx="2" stroke="#aaa" stroke-width="1"/><line x1="13" y1="11" x2="27" y2="11" stroke="#ccc"/><rect x="13" y="14" width="14" height="8" rx="1" fill="#e0e0e0"/><line x1="13" y1="26" x2="24" y2="26" stroke="#ddd"/><line x1="13" y1="30" x2="20" y2="30" stroke="#e5e5e5"/></svg>',
+  poster:   '<svg width="40" height="40" fill="none" viewBox="0 0 40 40"><rect x="10" y="4" width="20" height="32" rx="2" stroke="#aaa" stroke-width="1"/><text x="20" y="23" text-anchor="middle" font-size="9" fill="#ccc" font-family="sans-serif">Aa</text></svg>',
+  ETC:      '<svg width="40" height="40" fill="none" viewBox="0 0 40 40"><rect x="6" y="10" width="28" height="20" rx="3" stroke="#aaa" stroke-width="1"/><circle cx="20" cy="20" r="5" stroke="#ccc" stroke-width="1"/></svg>',
+  video:    '<svg width="40" height="40" fill="none" viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="24" rx="3" stroke="#aaa" stroke-width="1"/><polygon points="17,14 17,26 28,20" fill="#ccc"/></svg>',
+  personal: '<svg width="40" height="40" fill="none" viewBox="0 0 40 40"><path d="M20 6l2.5 6H29l-5.5 4 2 6.5L20 18.5 14.5 22.5l2-6.5L11 12h6.5L20 6z" stroke="#aaa" stroke-width="1" fill="none"/><line x1="10" y1="30" x2="30" y2="30" stroke="#ccc"/><line x1="14" y1="34" x2="26" y2="34" stroke="#ddd"/></svg>',
+};
+
+
+/* ─────────── 유튜브 ID로 썸네일 URL 생성 ─────────── */
+
+function ytThumb(id) {
+  return 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+}
+
+
+/* ─────────── 카드 렌더링 ─────────── */
+
+const grid = document.getElementById('grid');
+
+function render(f) {
+  grid.innerHTML = '';
+  P.forEach((p, i) => {
+    if (f !== 'all' && p.c !== f) return;
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.onclick = () => openM(i);
+
+    // 썸네일 결정: 이미지 > 유튜브 썸네일 > 기본 아이콘
+    let thumb;
+    const playIcon = p.youtube ? '<div class="card-play"></div>' : '';
+
+    if (p.img) {
+      thumb = '<img src="' + p.img + '" alt="' + p.t + '">' + playIcon;
+    } else if (p.youtube) {
+      thumb = '<img src="' + ytThumb(p.youtube) + '" alt="' + p.t + '">' + playIcon;
+    } else {
+      thumb = icons[p.c] || '';
+    }
+
+    d.innerHTML =
+      '<div class="card-img" style="background:' + p.bg + '">' + thumb + '</div>' +
+      '<div class="card-info">' +
+        '<div class="card-tag">' + p.cl + '</div>' +
+        '<div class="card-name">' + p.t + '</div>' +
+      '</div>';
+
+    grid.appendChild(d);
+  });
+}
+render('all');
+
+
+/* ─────────── 필터 ─────────── */
+
+document.querySelectorAll('.fil').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.fil').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    render(b.dataset.f);
+  };
+});
+
+
+/* ─────────── 모달 ─────────── */
+
+function openM(i) {
+  const p = P[i];
+  const mediaWrap = document.getElementById('modalMedia');
+
+  // 유튜브 영상이면 → iframe 플레이어
+  if (p.youtube) {
+    mediaWrap.innerHTML =
+      '<div class="modal-video">' +
+        '<button class="close-btn" onclick="closeM()" style="position:absolute;top:10px;right:10px;z-index:2;">✕</button>' +
+        '<iframe src="https://www.youtube.com/embed/' + p.youtube + '?autoplay=1&rel=0" ' +
+          'allow="autoplay; encrypted-media" allowfullscreen></iframe>' +
+      '</div>';
+  }
+  // 이미지가 있으면 → 이미지 표시
+  else if (p.img) {
+    mediaWrap.innerHTML =
+      '<div class="modal-img" style="background:' + p.bg + '">' +
+        '<button class="close-btn" onclick="closeM()">✕</button>' +
+        '<img src="' + p.img + '" alt="' + p.t + '">' +
+      '</div>';
+  }
+  // 둘 다 없으면 → 기본 아이콘
+  else {
+    const bigIcon = (icons[p.c] || '')
+      .replace(/width="40"/g, 'width="56"')
+      .replace(/height="40"/g, 'height="56"');
+    mediaWrap.innerHTML =
+      '<div class="modal-img" style="background:' + p.bg + '">' +
+        '<button class="close-btn" onclick="closeM()">✕</button>' +
+        bigIcon +
+      '</div>';
+  }
+
+  document.getElementById('mCat').textContent = p.cl;
+  document.getElementById('mTitle').textContent = p.t;
+  document.getElementById('mDesc').textContent = p.desc;
+  document.getElementById('mClient').textContent = p.client;
+  document.getElementById('mYear').textContent = p.y;
+  document.getElementById('mTools').textContent = p.tools;
+  document.getElementById('overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeM() {
+  const mediaWrap = document.getElementById('modalMedia');
+  // 유튜브 iframe 제거 (영상 정지)
+  const iframe = mediaWrap.querySelector('iframe');
+  if (iframe) iframe.src = '';
+
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeM() });
+</script>
+</body>
+</html>
